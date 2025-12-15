@@ -35,11 +35,16 @@
             <button class="button" type="button" id="LoadGame">Load Game<canvas></canvas></button>
             <button class="button" type="button" id="SaveGame">Save Game<canvas></canvas></button>
             <button class="button" type="button" id="Settings">Settings<canvas></canvas></button>
-            <div id="Menu_Settings" class="new_hiddenContent">
-                <div id="Settings_GameInfo" class="Settings_Category">Toggle Game stats</div>
-                <div id="Settings_GameInfo2" class="Settings_Category">Toggle Game stats</div>
-                <div id="Settings_GameInfo3" class="Settings_Category">Toggle Game stats</div>
-                <div id="Settings_GameInfo4" class="Settings_Category">Toggle Game stats</div>
+            <div id="Menu_Settings" class="new_hiddenContent centerContent">
+                <button id="blablabla" type="button" class="Settings_Category"
+                    style="min-width: 0px; visibility: hidden;"></button>
+
+                <button id="Settings_GameInfo1" type="button" class="Settings_Category" onclick="ToggleGameStats(this)">Game stats off</button>
+                <button id="Settings_GameInfo2" type="button" class="Settings_Category">Key assignment</button>
+                <button id="Settings_GameInfo3" type="button" class="Settings_Category">Instructions</button>
+
+                <button id="blablablub" type="button" class="Settings_Category"
+                    style="min-width: 0px; visibility: hidden;"></button>
             </div>
             <button class="button" type="button" id="Exit">Exit<canvas></canvas></button>
         </div>

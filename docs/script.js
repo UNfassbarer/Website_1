@@ -162,10 +162,31 @@ function CloseMenu() {
   MenuOpen = false;
 }
 
-function ToggleHiddenSettings() {
-  const settingsMenu = document.getElementById("Menu_Settings");
-  settingsMenu.classList.toggle("new_hiddenContent");
-}
+
+// Settings menu
+const settingsMenu = document.getElementById("Menu_Settings");
+
+function ToggleHiddenSettings() { settingsMenu.classList.toggle("new_hiddenContent") };
+
+// Scroll bar for settings menu
+settingsMenu.addEventListener("wheel", (e) => {
+  e.preventDefault(); // prevent vertical page scroll
+  settingsMenu.scrollLeft += e.deltaY / 4; // scroll horizontally
+});
+
+// Game stats toggle
+const GameInfoBox = document.getElementById("gameInfo");
+
+ToggleGameStats = (id) => {
+  const Button = document.getElementById(id.id);
+  GameInfoBox.classList.toggle("hiddenContent");
+  !Button.classList.contains("ToggleActiveColor") ?
+    Button.innerText = "Game stats on" :
+    Button.innerText = "Game stats off";
+  Button.classList.toggle("ToggleActiveColor");
+};
+
+
 // Create star background with canvas
 let createStars = true
 function createStar() {
