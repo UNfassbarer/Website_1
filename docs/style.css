@@ -3,11 +3,16 @@ body {
 }
 
 .hiddenContent {
-  display: none;
+  /* display: none; */
   opacity: 0;
   pointer-events: none;
   position: absolute;
   visibility: hidden;
+}
+
+.new_hiddenContent {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .centerContent {
@@ -118,10 +123,6 @@ body {
   cursor: pointer;
 }
 
-ul {
-  list-style-type: none;
-}
-
 .button canvas {
   position: absolute;
   top: 20%;
@@ -154,6 +155,46 @@ ul {
   width: 190px;
   opacity: 1;
 }
+
+#Menu_Settings {
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -12%);
+  position: absolute;
+  height: 125px;
+  width: 225px;
+  border: rgb(0, 200, 255) 2px solid;
+  border-radius: 12px;
+  background: radial-gradient(circle at 100%,
+      rgba(0, 0, 0, 0.5) 10%,
+      rgba(255, 0, 247, 0.6) 50%,
+      rgba(255, 255, 255, 0.9) 65%,
+      rgba(0, 0, 0, 0.6) 66%,
+      rgba(10, 0, 70, 0.5) 80%);
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+}
+
+.Settings_Category {
+  position: relative;
+  margin: 10px;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  border-radius: 8px;
+  border-color: #00c8ff 3px solid;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(111, 0, 255) 2px 2px 3px;
+}
+
+/*    Cool sun in space ;)
+  background: radial-gradient(circle at 50%,
+      rgba(0, 0, 0, 0.6) 10%,
+      rgba(255, 0, 247, 0.7) 50%,
+      rgba(115, 0, 0, 0.8) 60%,
+      rgba(0, 0, 0, 0.9) 70%); */
 
 .particle {
   position: fixed;

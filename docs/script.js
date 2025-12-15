@@ -32,7 +32,7 @@ function toggleButtonPress(status) {
   })
 };
 
-// Generate random coler between two defined colors
+// Generate coler between two defined colors
 const RGB = (x, y) => `rgb(${x}, ${y - x}, ${y})`;
 
 // Menu button actions
@@ -40,7 +40,7 @@ const menu_actions = {
   NewGame: (el) => { console.log(el.id), newGame(), CloseMenu() },
   LoadGame: (el) => { console.log(el.id) },
   SaveGame: (el) => { console.log(el.id) },
-  Settings: (el) => { console.log(el.id) },
+  Settings: (el) => { console.log(el.id), ToggleHiddenSettings() },
   Exit: (el) => { console.log(el.id), CloseMenu() }
 }
 
@@ -103,7 +103,7 @@ const Menu = document.getElementById("Menu_Container");
 let originalCanvasSizes = null;
 let resizeStep = 0;
 
-// Circle action for clos/open menu
+// Circle action for close/open menu
 function OpenMenuAnimation(action, border, color1, color2) {
   action ?
     EditStyle(symbols, { scale: "5", filter: "blur(0.5px)" })
@@ -114,16 +114,19 @@ function OpenMenuAnimation(action, border, color1, color2) {
 }
 
 // Toggle hidden menu content
-const ToggleHiddenMenu = () => Menu.querySelectorAll("div").forEach(div => { div.classList.toggle("hiddenContent") });
+const ToggleHiddenMenu = () => {
+  Menu.querySelectorAll(":scope > div")
+    .forEach(div => div.classList.toggle("hiddenContent"));
+};
 
-// Open and close menu under observation of userdevice
-let MenuOpen = false;
+// Open and close menu, under observation of userdevice
 let menuEvent = null;
 window.matchMedia("(pointer: coarse)").matches ? menuEvent = "click" : menuEvent = "mouseenter";
 handleEvent(Menu, "add", menuEvent, OpenMenu)
 
 // Open menu
 let menuStart = false
+let MenuOpen = false;
 function OpenMenu() {
   // Executed every time menu is closed
   if (!MenuOpen) {
@@ -157,6 +160,11 @@ function CloseMenu() {
     OpenMenuAnimation(false, 2, 100, 60);
   }, 500);
   MenuOpen = false;
+}
+
+function ToggleHiddenSettings() {
+  const settingsMenu = document.getElementById("Menu_Settings");
+  settingsMenu.classList.toggle("new_hiddenContent");
 }
 // Create star background with canvas
 let createStars = true
