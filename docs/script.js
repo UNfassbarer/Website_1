@@ -1,5 +1,4 @@
 // Utility functions
-// const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 // Fast, seedable random generator
 const rand = (() => {
   let seed = Date.now();
@@ -18,7 +17,7 @@ const getRandomInt = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
 const handleEvent = (element, action, event, callback) => element[`${action}EventListener`](event, callback);
 
 // Clickevents for menu buttons 
-document.querySelectorAll("#Menu_Content button").forEach((button) => {
+document.querySelectorAll(".button").forEach((button) => {
   handleEvent(button, "add", "click", () => ButtonClick(button));
 });
 
@@ -51,7 +50,7 @@ function ButtonClick(el) { //Every Click creates particles
   if (counter === 0) {
     toggleButtonPress("none");
     setTimeout(() => { toggleButtonPress("auto") }, 750);
-    menu_actions[el.id](el);
+    menu_actions[el.id]?.(el);
 
     // Create particles with interval instead of recursion
     particleIntervalId = setInterval(() => {
@@ -162,7 +161,6 @@ function CloseMenu() {
   MenuOpen = false;
 }
 
-
 // Settings menu
 const settingsMenu = document.getElementById("Menu_Settings");
 
@@ -177,7 +175,7 @@ settingsMenu.addEventListener("wheel", (e) => {
 // Game stats toggle
 const GameInfoBox = document.getElementById("gameInfo");
 
-ToggleGameStats = (id) => {
+const ToggleGameStats = (id) => {
   const Button = document.getElementById(id.id);
   GameInfoBox.classList.toggle("hiddenContent");
   !Button.classList.contains("ToggleActiveColor") ?
@@ -186,6 +184,39 @@ ToggleGameStats = (id) => {
   Button.classList.toggle("ToggleActiveColor");
 };
 
+const Button = document.getElementById("Settings_KeyAssignment");
+const ToggleKeys = () => {
+  settingsMenu.classList.toggle("ToggleMenuSettings");
+  Button.classList.toggle("ToggleKeyAssignment");
+  Button.classList.toggle("Settings_Category");
+}
+
+
+const AssignmentKeys = {
+  GoRight: ["ArrowRight", "KeyD"],
+  GoLeft: ["ArrowLeft", "KeyA"],
+  Jump: ["ArrowUp", "Space"],
+  PauseGame: ["Escape"]
+};
+
+for (const [action, keys] of Object.entries(AssignmentKeys)) {
+  console.log(action, keys);
+
+  const NewButton = document.createElement("div");
+
+  NewButton.innerText = `${action}: ${keys.join(" or ")}`;
+
+  NewButton.className = "KeyAssignmentCategory";
+  NewButton.id = action;
+  Button.appendChild(NewButton);
+  NewButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.currentTarget.classList.contains("ToggleActiveColor") ?
+      e.currentTarget.innerText = "ERROR!" :
+      e.currentTarget.innerText = "Press any key";
+    e.currentTarget.classList.toggle("ToggleActiveColor");
+  });
+}
 
 // Create star background with canvas
 let createStars = true
@@ -202,6 +233,5 @@ function createStar() {
   });
   document.body.appendChild(star);
   setTimeout(() => star.remove(), 2500);
-  // Increased delay from 10ms to 50ms to reduce DOM operations
   if (createStars) setTimeout(createStar, 50);
 }

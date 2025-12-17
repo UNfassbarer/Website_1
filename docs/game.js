@@ -128,7 +128,7 @@ const frameDelay = 1000 / 60; // ~16.67ms per frame
 
 function gameLoop(currentTime) {
     // Pause functionality
-    if (keys["Escape"] && !keysPrev["Escape"]) {
+    if (keys[AssignmentKeys.PauseGame[0]] && !keysPrev[AssignmentKeys.PauseGame[0]]) {
         PausedGame = !PausedGame;
         clearInterval(TimingInterval);
         if (!PausedGame) SetTimingInterval(Number(survivedTime));
@@ -369,18 +369,17 @@ function applyBooster(id) {
 
 function updatePlayer() {
     // Horizontal player movement
-    if (keys["ArrowRight"] || keys["KeyD"]) {
+    if (keys[AssignmentKeys.GoRight[0]] || keys[AssignmentKeys.GoRight[1]]) {
         player.dx = player.speed;   // Right arrow OR D
-    } else if (keys["ArrowLeft"] || keys["KeyA"]) {
+    } else if (keys[AssignmentKeys.GoLeft[0]] || keys[AssignmentKeys.GoLeft[1]]) {
         player.dx = -player.speed;  // Left arrow OR A
     } else {
         player.dx = 0; //Unless player will keep speed
     }
-    if ((keys["ArrowUp"] || keys["Space"]) && player.onGround) {
+    if ((keys[AssignmentKeys.Jump[0]] || keys[AssignmentKeys.Jump[1]]) && player.onGround) {
         player.dy = player.jumpPower; // Up arrow or space
         player.onGround = false;
     }
-
     // Gravity player
     player.dy += player.gravity;
 
