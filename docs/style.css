@@ -2,6 +2,7 @@ body {
   transition: all 1s ease-in-out;
 }
 
+/* Global Classes */
 .hiddenContent {
   /* display: none; */
   opacity: 0;
@@ -28,6 +29,7 @@ body {
   transform: translate(-50%, -50%);
 }
 
+/* Menu */
 #Menu_Container {
   position: absolute;
   z-index: 1;
@@ -107,6 +109,7 @@ body {
     0 -10px 20px #ff8000, 0 -18px 40px #f00;
 }
 
+/* 5 Menu Buttons */
 .button {
   position: relative;
   height: 50px;
@@ -158,6 +161,7 @@ body {
   opacity: 1;
 }
 
+/* Backgound star particles */
 .particle {
   position: fixed;
   border-radius: 50%;
@@ -165,6 +169,29 @@ body {
   opacity: 0.5;
   z-index: 10;
 }
+
+.SupportCanvas {
+  position: absolute;
+  perspective: 1000px;
+}
+
+.jumpParticle {
+  position: absolute;
+  border: rgb(0, 200, 255) 3px solid;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transform: rotateX(70deg);
+  animation: jumopParticle 0.75s ease-in forwards;
+}
+
+/* .jumpParticle::after {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  background-color: black;
+  left: 30%;
+  border-radius: 50%;
+} */
 
 .button:focus:not(:active) {
   animation: click-glow 1s ease;
@@ -177,6 +204,13 @@ body {
       rgb(0, 191, 255),
       rgb(236, 27, 255));
   width: 125px;
+}
+
+/* Game Settings called with settings button */
+
+/* Gray or white background depending on selected button */
+.ToggleActiveColor {
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .Menu_Settings {
@@ -203,6 +237,7 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Size adjustment for Key display */
 .ToggleMenuSettings {
   height: auto;
   padding: 20px;
@@ -234,10 +269,6 @@ body {
 
 .Settings_Category:focus:not(:active) {
   animation: click-glow 0.75s ease;
-}
-
-.ToggleActiveColor {
-  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .ToggleKeyAssignment {
@@ -275,14 +306,6 @@ body {
   background-color: rgba(255, 255, 255, 0.7);
 }
 
-/*    Cool sun in space ;)
-  background: radial-gradient(circle at 50%,
-      rgba(0, 0, 0, 0.6) 10%,
-      rgba(255, 0, 247, 0.7) 50%,
-      rgba(115, 0, 0, 0.8) 60%,
-      rgba(0, 0, 0, 0.9) 70%); */
-
-
 .Menu_Loading_Animation {
   position: absolute;
   outline: olivedrab 3px solid;
@@ -302,18 +325,23 @@ body {
   /* animation: glow 2.5s infinite; */
 }
 
-/* Game Box */
+/* Game Box for the main game area */
 .gameBox {
   position: absolute;
-  height: 90dvh;
-  width: 90dvw;
+  /* height: 90dvh;
+  width: 90dvw; */
+  height: 700px;
+  width: 1200px;
   image-rendering: pixelated;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
   outline: rgb(255, 4, 226) 2px solid;
   z-index: 0;
+  display: block;
+  width: 800px;
+  height: 450px;
+  zoom: 1;
 }
 
+/* Game Over display */
 #gameOver {
   position: absolute;
   font-size: 6vw;
@@ -331,6 +359,7 @@ body {
   transform: translate(-50%, -50%) rotate(12.5deg);
 }
 
+/* Game Info display */
 #gameInfo {
   position: absolute;
   bottom: 25px;
@@ -348,3 +377,12 @@ body {
 #gameInfo div {
   margin: 10px;
 }
+
+/* Future plans: 
+  Cool sun in space ;)
+  background: radial-gradient(circle at 50%,
+      rgba(0, 0, 0, 0.6) 10%,
+      rgba(255, 0, 247, 0.7) 50%,
+      rgba(115, 0, 0, 0.8) 60%,
+      rgba(0, 0, 0, 0.9) 70%);
+*/

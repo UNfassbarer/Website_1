@@ -191,7 +191,6 @@ const ToggleKeys = () => {
   Button.classList.toggle("Settings_Category");
 }
 
-
 const AssignmentKeys = {
   GoRight: ["ArrowRight", "KeyD"],
   GoLeft: ["ArrowLeft", "KeyA"],
@@ -200,7 +199,6 @@ const AssignmentKeys = {
 };
 
 for (const [action, keys] of Object.entries(AssignmentKeys)) {
-  console.log(action, keys);
 
   const NewButton = document.createElement("div");
 

@@ -1,10 +1,22 @@
 const Infobox = document.getElementById("gameInfo");
 // Manage played games & deaths
-function updateGameStats(Category, Value) { Infobox.querySelector(`${Category}`).innerHTML = Value; }
+function updateGameStats(Category, Value) {
+    Infobox.querySelector(`${Category}`).innerHTML = Value;
+}
 
 // Get canvas and context
 const canvas = document.getElementById("gameContainer");
 const ctx = canvas.getContext("2d");
+
+// Sync canvas internal resolution & make it adoptive to CSS size
+
+function resizeCanvas() {
+    canvas.width = 1200;
+    canvas.height = 700;
+}
+
+// window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 // Load new game and reset background and old values
 let imgCounter = 0;
@@ -21,8 +33,24 @@ const portalImage = new Image();
 const R_SpikeImage = new Image();
 const orbImage = new Image();
 
-const images = [playerImage, structureImage, spikeImage, R_SpikeImage, icelandImage, portalImage, orbImage];
-const sources = ["img/player.png", "img/structureIMG.png", "img/spike.png", "img/R_spike.png", "img/iceland.png", "img/portal.png", "img/orb.png"];
+const images = [
+    playerImage,
+    structureImage,
+    spikeImage,
+    R_SpikeImage,
+    icelandImage,
+    portalImage,
+    orbImage,
+];
+const sources = [
+    "img/player.png",
+    "img/structureIMG.png",
+    "img/spike.png",
+    "img/R_spike.png",
+    "img/iceland.png",
+    "img/portal.png",
+    "img/orb.png",
+];
 images.forEach((img, i) => {
     img.onload = () => imgCounter++;
     img.src = sources[i];
@@ -36,8 +64,8 @@ function SetTimingInterval(previousTime) {
     TimingInterval = setInterval(function () {
         if (GameOver) clearInterval(TimingInterval);
         let elapsedTime = Date.now() - startTime;
-        survivedTime = (previousTime + (elapsedTime / 1000)).toFixed(2);
-        updateGameStats("#survivedTime", `${(survivedTime)}s`);
+        survivedTime = (previousTime + elapsedTime / 1000).toFixed(2);
+        updateGameStats("#survivedTime", `${survivedTime}s`);
     }, 100);
 }
 
@@ -45,7 +73,7 @@ function newGame() {
     if (GameOver) {
         GameOver = false;
         document.getElementById("gameOver").classList.add("hiddenContent");
-        document.getElementById("gameInfo").classList.remove("hiddenContent");
+        // document.getElementById("gameInfo").classList.remove("hiddenContent");
 
         SetTimingInterval(0);
 
@@ -62,16 +90,18 @@ function newGame() {
 }
 
 const player = {
-    x: 50,            // position X
+    x: 50, // position X
     y: canvas.height - 12, // position Y
-    width: 12,        // size
-    height: 24,       // size
-    dx: 0,            // horizontal velocity "deltaX"
-    dy: 0,            // vertical velocity "deltaY"
-    speed: 0.75,         // how fast player moves left/right
-    jumpPower: -4,   // how strong the jump is
-    gravity: 0.1,     // gravity force
-    onGround: true
+    // width: 64,        // size
+    // height: 128,       // size
+    width: 48, // size
+    height: 96, // size
+    dx: 0, // horizontal velocity "deltaX"
+    dy: 0, // vertical velocity "deltaY"
+    speed: 2, // how fast player moves left/right
+    jumpPower: -16, // how strong the jump is
+    gravity: 0.5, // gravity force
+    onGround: true,
 };
 
 class ObjectPool {
@@ -104,7 +134,7 @@ const obstacle = class {
         this.dx = dx;
         this.id = id;
     }
-}
+};
 class spike extends obstacle { }
 class iceland extends obstacle { }
 class portal extends obstacle { }
@@ -119,8 +149,8 @@ const orbPool = new ObjectPool(() => new orb(0, 0, 0, 0, 0), 8);
 // Keys
 let keys = {};
 let keysPrev = {};
-document.addEventListener("keydown", e => keys[e.code] = true);
-document.addEventListener("keyup", e => keys[e.code] = false);
+document.addEventListener("keydown", (e) => (keys[e.code] = true));
+document.addEventListener("keyup", (e) => (keys[e.code] = false));
 
 // Frame rate limiting (60 FPS)
 let lastFrameTime = 0;
@@ -128,7 +158,10 @@ const frameDelay = 1000 / 60; // ~16.67ms per frame
 
 function gameLoop(currentTime) {
     // Pause functionality
-    if (keys[AssignmentKeys.PauseGame[0]] && !keysPrev[AssignmentKeys.PauseGame[0]]) {
+    if (
+        keys[AssignmentKeys.PauseGame[0]] &&
+        !keysPrev[AssignmentKeys.PauseGame[0]]
+    ) {
         PausedGame = !PausedGame;
         clearInterval(TimingInterval);
         if (!PausedGame) SetTimingInterval(Number(survivedTime));
@@ -146,11 +179,15 @@ function gameLoop(currentTime) {
     if (!GameOver) requestAnimationFrame(gameLoop);
 }
 
-let obstacles = [], spikes = [], R_spikes = [], icelands = [], portals = [], orbs = [];
+let obstacles = [],
+    spikes = [],
+    R_spikes = [],
+    icelands = [],
+    portals = [],
+    orbs = [];
 const portalMap = new Map();
 
 function renderLogic() {
-
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -166,12 +203,11 @@ function renderLogic() {
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
 }
 
-const widthSpike = player.width * (2 / 3);  //8
+const widthSpike = player.width * (2 / 3); //8
 const heightSpike = player.width * (2 / 3); //8
-const widthOrb = 6;
-const heightOrb = 6;
-const objectSpeed = 1;
-const universalSize = player.height;
+const widthOrb = 24;
+const heightOrb = 24;
+const objectSpeed = 3;
 
 const groundSpike = () => {
     const s_P = spikePool.get();
@@ -181,10 +217,10 @@ const groundSpike = () => {
     s_P.height = heightSpike;
     s_P.dx = objectSpeed;
     spikes.push(s_P);
-}
+};
 
 const temporatyOrbs = (oX, oY, oWidth) => {
-    const i = getRandomInt(1, 3)
+    const i = getRandomInt(1, 3);
     const o_P = orbPool.get();
     o_P.x = oX + oWidth / 2 - widthOrb / 2;
     o_P.y = oY - heightOrb;
@@ -193,7 +229,7 @@ const temporatyOrbs = (oX, oY, oWidth) => {
     o_P.dx = objectSpeed;
     o_P.id = i;
     orbs.push(o_P);
-}
+};
 
 let O_2_lastWidth = 0; //O_2 => object 2
 const groundObstacle = () => {
@@ -218,14 +254,15 @@ const groundObstacle = () => {
         }
     }
     O_2_lastWidth = width;
-}
+};
 
 let O_3_lastWidth = 0;
 const flyingIsland = () => {
     const x = canvas.width;
     const height = getRandomInt(player.height / 4, player.height / 2);
     const widthIceland = getRandomInt(player.height * 1.5, player.height * 3);
-    const y = canvas.height - getRandomInt(player.height * 2, player.height * 3) - height;
+    const y =
+        canvas.height - getRandomInt(player.height * 2, player.height * 3) - height;
 
     const fi_P = icelandPool.get();
     fi_P.x = x;
@@ -236,11 +273,13 @@ const flyingIsland = () => {
     icelands.push(fi_P);
 
     // Spawn rotated spikes on the flying island
-    if (getRandomInt(0, 1) === 1) { //Spawn spikes on iseland?
+    if (getRandomInt(0, 1) === 1) {
+        //Spawn spikes on iseland?
         const counterSpikes = Math.floor(widthIceland / widthSpike); //Clear number of max. spikes that can spawn
 
-        // How much spikes aktually to spawn? 
-        if (getRandomInt(1, 2) === 2) { // 1 spike
+        // How much spikes aktually to spawn?
+        if (getRandomInt(1, 2) === 2) {
+            // 1 spike
             const s_P = spikePool.get();
             s_P.x = x + getRandomInt(0, widthIceland - widthSpike);
             s_P.y = y + height;
@@ -248,10 +287,12 @@ const flyingIsland = () => {
             s_P.height = heightSpike;
             s_P.dx = objectSpeed;
             R_spikes.push(s_P);
-        } else { // Multiple spikes
+        } else {
+            // Multiple spikes
             let deltaX = 0;
-            let xSpikes = x + getRandomInt(0, widthIceland - widthSpike * counterSpikes);
-            const count = getRandomInt(2, counterSpikes)
+            let xSpikes =
+                x + getRandomInt(0, widthIceland - widthSpike * counterSpikes);
+            const count = getRandomInt(2, counterSpikes);
             for (let i = 0; i < count; i++) {
                 const s_P = spikePool.get();
                 s_P.x = xSpikes + deltaX;
@@ -261,16 +302,16 @@ const flyingIsland = () => {
                 s_P.dx = objectSpeed;
                 R_spikes.push(s_P);
 
-                deltaX += widthSpike * counterSpikes / count; //Spread spikes evenly to each other over the island
+                deltaX += (widthSpike * counterSpikes) / count; //Spread spikes evenly to each other over the island
             }
         }
     }
     O_3_lastWidth = widthIceland;
-}
+};
 
 const groundPortals = (index) => {
-    const height = 32;
-    const width = 32;
+    const height = 96;
+    const width = 96;
     const x = canvas.width + index * getRandomInt(125, 200);
     const y = canvas.height - height;
     const p_P = portalPool.get();
@@ -282,7 +323,7 @@ const groundPortals = (index) => {
     p_P.id = index;
     portals.push(p_P);
     portalMap.set(index, p_P);
-}
+};
 
 let spawnedObject = null;
 let lastSpawnedObstacle = null;
@@ -312,7 +353,7 @@ function spawnObject() {
     //No back to back portals
     if (nextNum === 3) {
         do nextNum = getRandomInt(1, 4);
-        while (nextNum === 3)
+        while (nextNum === 3);
     } else nextNum = getRandomInt(1, 4);
     if (spawnedObject) lastSpawnedObstacle = spawnedObject;
 }
@@ -320,16 +361,17 @@ function spawnObject() {
 // Lightweight distance check spawn only when there is enaught space
 function checkSpawnDistance() {
     if (!lastSpawnedObstacle || GameOver) return;
-    const distanceToRight = canvas.width - (lastSpawnedObstacle.x + lastSpawnedObstacle.width);
-    const objectleftEdge = lastSpawnedObstacle.x + lastSpawnedObstacle.width < canvas.width;
+    const distanceToRight =
+        canvas.width - (lastSpawnedObstacle.x + lastSpawnedObstacle.width);
+    const objectleftEdge =
+        lastSpawnedObstacle.x + lastSpawnedObstacle.width < canvas.width;
     const spawnThreshold = 100; // 100px
     if (distanceToRight >= spawnThreshold && objectleftEdge) spawnObject();
 }
 
-// Manage collisions & movements  
+// Manage collisions & movements
 function updateLogic() {
-
-    updatePlayer();// Move player first
+    updatePlayer(); // Move player first
 
     // Only update arrays that have objects
     if (obstacles.length) updateObjects(obstacles);
@@ -354,29 +396,39 @@ function applyBooster(id) {
     if (id === 1) {
         const speed = player.speed;
         player.speed = speed * 2;
-        setTimeout(() => { player.speed = speed }, boosterDelay * 1000);
+        setTimeout(() => {
+            player.speed = speed;
+        }, boosterDelay * 1000);
     }
     if (id === 2) {
         const jumpPower = player.jumpPower;
         player.jumpPower = player.jumpPower * 1.25;
-        setTimeout(() => { player.jumpPower = jumpPower }, boosterDelay * 1000);
+        setTimeout(() => {
+            player.jumpPower = jumpPower;
+        }, boosterDelay * 1000);
     }
     if (id === 3) {
         playerProtection = true;
-        setTimeout(() => { playerProtection = false }, boosterDelay * 1000);
+        setTimeout(() => {
+            playerProtection = false;
+        }, boosterDelay * 1000);
     }
 }
 
 function updatePlayer() {
     // Horizontal player movement
     if (keys[AssignmentKeys.GoRight[0]] || keys[AssignmentKeys.GoRight[1]]) {
-        player.dx = player.speed;   // Right arrow OR D
+        player.dx = player.speed; // Right arrow OR D
     } else if (keys[AssignmentKeys.GoLeft[0]] || keys[AssignmentKeys.GoLeft[1]]) {
-        player.dx = -player.speed;  // Left arrow OR A
+        player.dx = -player.speed; // Left arrow OR A
     } else {
         player.dx = 0; //Unless player will keep speed
     }
-    if ((keys[AssignmentKeys.Jump[0]] || keys[AssignmentKeys.Jump[1]]) && player.onGround) {
+    if (
+        (keys[AssignmentKeys.Jump[0]] || keys[AssignmentKeys.Jump[1]]) &&
+        player.onGround
+    ) {
+        JumpAnimation(player.x, player.y);
         player.dy = player.jumpPower; // Up arrow or space
         player.onGround = false;
     }
@@ -397,24 +449,25 @@ function updatePlayer() {
     // Collision right wall
     if (player.x + player.width >= canvas.width) {
         player.x = canvas.width - player.width - 1;
-        player.dx = 0; //Reset deltaX to prevent useless calculations when there is no  input 
+        player.dx = 0; //Reset deltaX to prevent useless calculations when there is no  input
     }
     if (player.x <= 0) {
-        player.x = 1
+        player.x = 1;
         player.dx = 0; //Reset deltaY to <||>
     }
 }
 
 // Update, movement & remove of objects
-const OCR = 50; //object-collision-radius
-const OCR_SQ = OCR * OCR; // Pre-calculate squared distance
+// const OCR = 50; //object-collision-radius
+// const OCR_SQ = OCR * OCR; // Pre-calculate squared distance
 
 function updateObjects(object) {
     for (let i = object.length - 1; i >= 0; i--) {
         const o = object[i];
-        o.x -= o.dx;// Movement
+        o.x -= o.dx; // Movement
 
-        if (o.x + o.width < 0) { // Remove off screen objects and return to pool
+        if (o.x + o.width < 0) {
+            // Remove off screen objects and return to pool
             // Use swap-and-pop instead of splice for better performance
             const last = object[object.length - 1];
             object[i] = last;
@@ -431,9 +484,19 @@ function updateObjects(object) {
         }
 
         // Squared distance
-        const dx = o.x - player.x;
-        const dy = o.y - player.y;
-        if (dx * dx + dy * dy < OCR_SQ) checkPlayerCollision(object, o, i);
+        // const dx = o.x - player.x;
+        // const dy = o.y - player.y;
+
+        if (
+            player.x < o.x + o.width &&
+            player.x + player.width > o.x &&
+            player.y < o.y + o.height &&
+            player.y + player.height > o.y
+        ) {
+            checkPlayerCollision(object, o, i);
+        }
+
+        // if (dx * dx + dy * dy < OCR_SQ) checkPlayerCollision(object, o, i);
     }
 }
 
@@ -456,15 +519,23 @@ function updatePortals() {
 
     const portal1 = portalMap.get(0);
     const portal2 = portalMap.get(1);
-    const checkTeleport = player.y + player.height > portal1.y && portal2.x + portal2.width < canvas.width - 10;
+    const checkTeleport =
+        player.y + player.height > portal1.y &&
+        portal2.x + portal2.width < canvas.width - 10;
 
     for (let i = portals.length - 1; i >= 0; i--) {
         const p = portals[i];
         p.x -= p.dx;
 
         if (checkTeleport) {
-            const leftEntrance = player.x + player.width > p.x && player.x + player.width < p.x + p.width && player.x < p.x;
-            const rightEntrance = player.x > p.x && player.x < p.x + p.width && player.x + player.width > p.x + p.width;
+            const leftEntrance =
+                player.x + player.width > p.x &&
+                player.x + player.width < p.x + p.width &&
+                player.x < p.x;
+            const rightEntrance =
+                player.x > p.x &&
+                player.x < p.x + p.width &&
+                player.x + player.width > p.x + p.width;
             const otherPortal = p.id === 0 ? portal2 : portal1;
 
             if (leftEntrance) player.x = otherPortal.x + otherPortal.width + 1;
@@ -483,7 +554,8 @@ function updatePortals() {
 
 function checkPlayerCollision(object, o, i) {
     // Orbs and effects
-    if (object === orbs &&
+    if (
+        object === orbs &&
         player.x + player.width > o.x &&
         player.x < o.x + o.width &&
         player.y < o.y + o.height &&
@@ -511,13 +583,15 @@ function checkPlayerCollision(object, o, i) {
         player.onGround = true;
     }
 
-    if (!playerProtection &&
+    if (
+        !playerProtection &&
         (object === spikes || object === R_spikes) &&
         player.x < o.x + o.width &&
         player.x + player.width > o.x &&
         player.y < o.y + o.height &&
         player.y + player.height > o.y
-    ) resetGame();
+    )
+        resetGame();
 }
 
 function resetGame() {
@@ -525,15 +599,15 @@ function resetGame() {
     updateGameStats("#deaths", DeathCounter);
     GameOver = true;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById("gameOver").classList.toggle("hiddenContent")
+    document.getElementById("gameOver").classList.toggle("hiddenContent");
 
     // Return all objects to their pools
-    obstacles.forEach(o => obstaclePool.release(o));
-    spikes.forEach(o => spikePool.release(o));
-    R_spikes.forEach(o => spikePool.release(o));
-    icelands.forEach(o => icelandPool.release(o));
-    orbs.forEach(o => orbPool.release(o));
-    portals.forEach(o => portalPool.release(o));
+    obstacles.forEach((o) => obstaclePool.release(o));
+    spikes.forEach((o) => spikePool.release(o));
+    R_spikes.forEach((o) => spikePool.release(o));
+    icelands.forEach((o) => icelandPool.release(o));
+    orbs.forEach((o) => orbPool.release(o));
+    portals.forEach((o) => portalPool.release(o));
 
     // Clear arrays
     obstacles = [];
@@ -548,4 +622,41 @@ function resetGame() {
     player.x = 50;
     player.y = canvas.height - player.height;
     player.onGround = true;
+}
+
+
+// Create a jump animation effect
+const Effects = [];// Store active effects for short jump delay
+const JumpEffectAmount = 2;
+let EffectCounter;
+function JumpAnimation(x, y) {
+    EffectCounter = JumpEffectAmount;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = rect.width / canvas.width;
+    const scaleY = rect.height / canvas.height;
+    const supportDiv = document.createElement("div");
+    supportDiv.className = "SupportCanvas centerContent";
+    supportDiv.style.left = rect.left + x * scaleX + "px";
+    supportDiv.style.top = rect.top + y * scaleY + player.height * scaleY - 10 + "px"; // align to feet
+    supportDiv.style.width = player.width * scaleX + "px";
+    document.body.appendChild(supportDiv);
+    Effects.push(supportDiv);
+    const Intervall = setInterval(() => {
+        if (EffectCounter <= 0) {
+            clearInterval(Intervall);
+            EffectCounter = JumpEffectAmount;
+            setTimeout(() => {
+                const el = Effects.shift();
+                el?.remove();
+            }, 1200);
+        }
+        const Length = player.width + EffectCounter * 10;
+        const height = player.height / 6;
+        const jumpEffect = document.createElement("div");
+        jumpEffect.className = "jumpParticle";
+        jumpEffect.style.width = Length * scaleX + "px";
+        jumpEffect.style.height = height * scaleY + "px";
+        supportDiv.appendChild(jumpEffect);
+        EffectCounter--;
+    }, 50);
 }
