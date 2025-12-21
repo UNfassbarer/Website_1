@@ -29,6 +29,22 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.buttonFix {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 /* Menu */
 #Menu_Container {
   position: absolute;
@@ -220,7 +236,7 @@ body {
   transform: translate(-50%, -12%);
   position: absolute;
   height: 125px;
-  width: 225px;
+  width: 145px;
   border: rgb(0, 200, 255) 2px solid;
   border-radius: 12px;
   background: radial-gradient(circle at 100%,
@@ -231,23 +247,25 @@ body {
       rgba(10, 0, 70, 0.5) 80%);
   transition: all 0.25s ease-in-out;
   display: flex;
-  gap: 30px;
+  gap: 60px;
   justify-content: flex-start;
   white-space: nowrap;
   scroll-behavior: smooth;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 /* Size adjustment for Key display */
 .ToggleMenuSettings {
-  height: auto;
-  padding: 20px;
+  height: 200px;
+  width: 200px;
 }
 
 .Settings_Category {
-  all: unset;
   cursor: pointer;
   position: relative;
-  min-width: 120px;
+  flex: 0 0 160px;
+  height: 40px;
   padding: 10px;
   border-radius: 4px;
   border: 2px solid rgb(0, 221, 255);
@@ -257,7 +275,7 @@ body {
   font-weight: bold;
   color: rgb(255, 255, 255);
   text-shadow: rgb(111, 0, 255) 2px 2px 3px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .Settings_Category:hover {
@@ -271,8 +289,7 @@ body {
   animation: click-glow 0.75s ease;
 }
 
-.ToggleKeyAssignment {
-  all: unset;
+.Toggle_KA {
   position: relative;
   border-radius: 4px;
   border: 2px solid rgb(0, 221, 255);
@@ -288,21 +305,19 @@ body {
   padding: 6px 8px 12px 8px;
 }
 
-.KeyAssignmentCategory {
-  all: unset;
-  position: relative;
-  height: 20px;
+.KA_Category {
+  height: 25px;
   cursor: pointer;
   border-radius: 2px;
   border: 1px solid rgb(0, 221, 255);
   box-shadow: #00c8ff 0px 0px 5px;
   background-color: rgba(150, 150, 150, 0.7);
-  left: 50%;
-  transform: translateX(-50%);
+  color: rgb(255, 255, 255);
   padding: 4px 8px 4px 8px;
+  transition: all 0.2s ease-in-out;
 }
 
-.KeyAssignmentCategory.ToggleActiveColor {
+.KA_Category.ToggleActiveColor {
   background-color: rgba(255, 255, 255, 0.7);
 }
 

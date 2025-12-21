@@ -39,13 +39,15 @@
             <button class="button" type="button" id="Exit">Exit<canvas></canvas></button>
 
             <div id="Menu_Settings" class="Menu_Settings new_hiddenContent centerContent">
-                <div class="Settings_Category" style="min-width: 0px; visibility: hidden;"></div>
-                <button id="Settings_GameInfo1" type="button" class="Settings_Category"
+
+                <button id="Settings_GameInfo1" type="button" class="Settings_Category "
                     onclick="ToggleGameStats(this)">Game stats off</button>
-                <button id="Settings_KeyAssignment" type="button" class="Settings_Category"
-                    onclick="ToggleKeys(this)">Key assignment</button>
-                <button id="Settings_GameInfo3" type="button" class="Settings_Category">Instructions</button>
-                <div class="Settings_Category" style="min-width: 0px; visibility: hidden;"></div>
+
+                <button id="Settings_KeyAssignment" type="button" class="Settings_Category " onclick="ToggleKeys()">Key
+                    assignment</button>
+
+                <button id="Settings_GameInfo3" type="button" class="Settings_Category ">Instructions</button>
+
             </div>
 
         </div>
@@ -58,7 +60,7 @@
         <div>Game: <label id="gamesPlayed"></label></div>
         <div>Time: <label id="survivedTime"></label></div>
     </div>
-    
+
     <script src="script.js"></script>
     <script src="game.js"></script>
 </body>

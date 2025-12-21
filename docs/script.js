@@ -168,8 +168,13 @@ function ToggleHiddenSettings() { settingsMenu.classList.toggle("new_hiddenConte
 
 // Scroll bar for settings menu
 settingsMenu.addEventListener("wheel", (e) => {
+  let delta = settingsMenu.offsetWidth;
   e.preventDefault(); // prevent vertical page scroll
-  settingsMenu.scrollLeft += e.deltaY / 4; // scroll horizontally
+
+  e.deltaY > 0 ?
+    settingsMenu.scrollLeft += delta :
+    settingsMenu.scrollLeft -= delta;
+
 });
 
 // Game stats toggle
@@ -184,11 +189,14 @@ const ToggleGameStats = (id) => {
   Button.classList.toggle("ToggleActiveColor");
 };
 
-const Button = document.getElementById("Settings_KeyAssignment");
+// Game key assignment toggle (KA)
+const KA_Button = document.getElementById("Settings_KeyAssignment");
 const ToggleKeys = () => {
-  settingsMenu.classList.toggle("ToggleMenuSettings");
-  Button.classList.toggle("ToggleKeyAssignment");
-  Button.classList.toggle("Settings_Category");
+  KA_Button.querySelectorAll(".KA_Category").forEach((el) => el.classList.toggle("hiddenContent"));
+  KA_Button.classList.toggle("Toggle_KA")
+  //adjusted height & padding
+  settingsMenu.classList.toggle("ToggleMenuSettings");//for settings menu
+  KA_Button.classList.toggle("Settings_Category");//for KA button's
 }
 
 const AssignmentKeys = {
@@ -197,16 +205,15 @@ const AssignmentKeys = {
   Jump: ["ArrowUp", "Space"],
   PauseGame: ["Escape"]
 };
-
 for (const [action, keys] of Object.entries(AssignmentKeys)) {
 
-  const NewButton = document.createElement("div");
+  const NewButton = document.createElement("button");
 
   NewButton.innerText = `${action}: ${keys.join(" or ")}`;
 
-  NewButton.className = "KeyAssignmentCategory";
+  NewButton.className = "KA_Category hiddenContent";
   NewButton.id = action;
-  Button.appendChild(NewButton);
+  KA_Button.appendChild(NewButton);
   NewButton.addEventListener('click', (e) => {
     e.stopPropagation();
     e.currentTarget.classList.contains("ToggleActiveColor") ?
@@ -217,7 +224,7 @@ for (const [action, keys] of Object.entries(AssignmentKeys)) {
 }
 
 // Create star background with canvas
-let createStars = true
+let createStars = false;
 function createStar() {
   const star = document.createElement("canvas");
   star.className = "star centeredObject";
