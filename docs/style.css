@@ -229,6 +229,12 @@ body {
   background-color: rgba(255, 255, 255, 0.7);
 }
 
+.HilightetElement{
+outline:#ff00ee 2px dashed;
+border-radius: 10%;
+animation: Blink 1s infinite;
+}
+
 .Menu_Settings {
   overflow-x: auto;
   top: 38%;
@@ -307,6 +313,7 @@ body {
 
 .KA_Category {
   height: 25px;
+  width: auto;
   cursor: pointer;
   border-radius: 2px;
   border: 1px solid rgb(0, 221, 255);
@@ -315,10 +322,15 @@ body {
   color: rgb(255, 255, 255);
   padding: 4px 8px 4px 8px;
   transition: all 0.2s ease-in-out;
+  gap: 5px;
 }
 
 .KA_Category.ToggleActiveColor {
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+.KA_Button_Key{
+
 }
 
 .Menu_Loading_Animation {

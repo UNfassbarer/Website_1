@@ -18,6 +18,19 @@
   }
 }
 
+@keyframes Blink {
+  0% {}
+
+  50% {
+    outline: rgba(255, 255, 255, 0) 10px dashed;
+  }
+
+  100% {
+    outline: #ff00ee 2px dashed;
+  }
+
+}
+
 /*glowing menu button per click*/
 @keyframes click-glow {
   0% {
