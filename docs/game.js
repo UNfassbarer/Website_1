@@ -668,17 +668,23 @@ function JumpAnimation(x, y) {
 
 // Create start animation
 function StartAnimation(StartTime, action) {
-    const CounterBoard = document.createElement("div");
-    CounterBoard.className = "StartAnimationBox centeredObject centerContent";
-    document.body.appendChild(CounterBoard);
     let Intervall = null;
+    const AnimationList = [];
+    const ParentDiv = document.createElement("div");
+    ParentDiv.className = "StartAnimationBox centerContent centeredObject";
+    AnimationList.push(ParentDiv);
+    document.body.appendChild(ParentDiv);
+    const CounterBoard = document.createElement("div");
+    CounterBoard.className = "StartAnimationText";
+    AnimationList.push(CounterBoard);
+    ParentDiv.appendChild(CounterBoard);
     Intervall = setInterval(function () {
         CounterBoard.innerText = StartTime;
         StartTime--;
         if (StartTime < 0) {
             clearInterval(Intervall);
-            CounterBoard.classList.toggle("hiddenContent");
+            AnimationList.forEach((element) => { element.remove() })
             if (action) action();
         };
-    }, 1000)
+    }, 1500)
 }

@@ -414,6 +414,23 @@ body {
 
 .StartAnimationBox {
   position: absolute;
-  font-size: calc(20vw + 20vh);
+  transform-style: preserve-3d;
+  animation: Rotate 1.5s infinite;
+  perspective: 1000px;
+}
+
+.StartAnimationText {
+  position: absolute;
+  font-size: 25vh;
   color: #ff00ee;
+}
+
+@keyframes Rotate {
+  0% {
+    transform: translateY(-500px) rotateY(180deg);
+  }
+
+  100% {
+    transform: translateY(500px) rotateY(-180deg);
+  }
 }
