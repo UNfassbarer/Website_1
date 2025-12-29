@@ -203,19 +203,19 @@ settingsMenu.addEventListener("wheel", (e) => {
   e.preventDefault(); // prevent vertical page scroll
 
   e.deltaY > 0
-    ? (settingsMenu.scrollLeft += delta)
-    : (settingsMenu.scrollLeft -= delta);
+    ? settingsMenu.scrollLeft += delta
+    : settingsMenu.scrollLeft -= delta;
 });
 
 // Game stats toggle
 const GameInfoBox = document.getElementById("gameInfo");
 
-const ToggleGameStats = (id) => {
-  const Button = document.getElementById(id.id);
+const ToggleGameStats = (e) => {
+  const Button = document.getElementById(e.id);
   GameInfoBox.classList.toggle("hiddenContent");
   !Button.classList.contains("ToggleActiveColor")
-    ? (Button.innerText = "Game stats on")
-    : (Button.innerText = "Game stats off");
+    ? Button.innerText = "Game stats on"
+    : Button.innerText = "Game stats off";
   Button.classList.toggle("ToggleActiveColor");
 };
 
@@ -239,6 +239,17 @@ const AssignmentKeys = {
   PauseGame: ["Escape"],
 };
 
+function GlobalClickControll() {
+  document.getElementById("Settings_KeyAssignment").querySelectorAll("button.KA_Category").forEach(button => {
+    if (button.classList.contains("ToggleActiveColor")) button.classList.remove("ToggleActiveColor");
+    button.querySelectorAll(".KA_Button_Key").forEach(element => {
+      if (element.classList.contains("HilightetElement")) element.classList.remove("HilightetElement");
+    });
+    if (button._handleKey) document.removeEventListener("keyup", button._handleKey);
+  });
+}
+document.addEventListener("click", GlobalClickControll);
+
 // Generate buttons for all actions access- & changable with a key's
 for (const [action, keys] of Object.entries(AssignmentKeys)) {
   const NewButton = document.createElement("button");
@@ -253,64 +264,58 @@ for (const [action, keys] of Object.entries(AssignmentKeys)) {
   for (let i = 0; i < keys.length; i++) {
     const keyDiv = document.createElement("div");
     keyDiv.innerText = keys[i];
-    keyDiv.id = `KA_Button_Key_${i}`
     keyDiv.className = "KA_Button_Key"
+    NewButton.dataset.action = action;
+
     NewButton.appendChild(keyDiv);
   }
   KA_Button.appendChild(NewButton);
 
-  // First solution got to complicated(EventListener inside EventListener inside EventListener ...) had to ask AI :(
-  // Events for generated button
-  NewButton.addEventListener("click", (e) => {
-    e.stopPropagation();
+  // Event for generated button
+  NewButton.addEventListener("click", HandleButtonClick);
+}
 
-    const button = e.currentTarget;
+// AI Implementation for cleaner code
+function HandleButtonClick(e) {
+  const button = e.currentTarget;
+  const action = button.dataset.action;
+  e.stopPropagation();
+  const KeyList = button.querySelectorAll(".KA_Button_Key");
+  let inputCounter = 0;
 
-    // Toggle accessibility for key change
-    if (!e.currentTarget.classList.contains("ToggleActiveColor")) {
-      const KeyList = e.currentTarget.querySelectorAll("div.KA_Button_Key");
-      let inputCounter = 0;
+  // Check for button click: 1st or 2end
+  if (!button.classList.toggle("ToggleActiveColor")) {
+    // cancel mode
+    if (button._handleKey) document.removeEventListener("keyup", button._handleKey);
 
-      // First key
-      KeyList[0].classList.add("HilightetElement");
-      let LastKey = KeyList[0].innerText;
-      KeyList[0].innerText = "Press any key";
+    KeyList.forEach(k => k.classList.remove("HilightetElement"));
+    return;
+  }
 
-      function handleKey(event) {
-        // Set key text
-        LastKey = KeyList[inputCounter].innerText;
-        KeyList[inputCounter].innerText = event.code;
-        KeyList[inputCounter].classList.remove("HilightetElement");
-        inputCounter++;
+  // activate mode
+  KeyList[0].classList.add("HilightetElement");
+  KeyList[0].innerText = "Press any key";
 
-        // console.log(button.querySelectorAll(".div")[0].innerText)
-        // AssignmentKeys[button.querySelectorAll(".div")[0].innerHtml] = ["KeyD", "ArrowRight"];
+  button._handleKey = function handleKey(event) {
+    KeyList[inputCounter].innerText = event.code;
+    KeyList[inputCounter].classList.remove("HilightetElement");
+    inputCounter++;
 
-        // Highlight next key if available
-        if (inputCounter < KeyList.length) {
-          KeyList[inputCounter].classList.add("HilightetElement")
-        } else {
-          button.classList.toggle("ToggleActiveColor");
-          document.removeEventListener("keyup", handleKey);
-        }
-      }
-      document.addEventListener("keyup", handleKey);
-    } else if (e.currentTarget.classList.contains("ToggleActiveColor")) {
-      e.currentTarget.classList.toggle("ToggleActiveColor");
+    // Update the actual AssignmentKeys object
+    if (inputCounter >= KeyList.length) AssignmentKeys[action] = Array.from(KeyList).map(k => k.innerText);
 
-      e.currentTarget.querySelectorAll("div.KA_Button_Key").forEach((e) => {
-
-        if (e.classList.contains("HilightetElement")) e.classList.toggle("HilightetElement")
-
-      });
-    };
-
-    e.currentTarget.classList.toggle("ToggleActiveColor");
-  });
+    // Reset key buttons
+    if (inputCounter < KeyList.length) KeyList[inputCounter].classList.add("HilightetElement")
+    else {
+      button.classList.remove("ToggleActiveColor");
+      document.removeEventListener("keyup", button._handleKey);
+    }
+  };
+  document.addEventListener("keyup", button._handleKey);
 }
 
 // Create star background with canvas
-let createStars = false;
+let createStars = true;
 function createStar() {
   const star = document.createElement("canvas");
   star.className = "star centeredObject";
