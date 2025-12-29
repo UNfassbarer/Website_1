@@ -41,7 +41,9 @@ const RGB = (x, y) => `rgb(${x}, ${y - x}, ${y})`;
 // Menu button actions
 const menu_actions = {
   NewGame: (el) => {
-    console.log(el.id), newGame(), CloseMenu();
+    console.log(el.id);
+    StartAnimation(3, newGame);
+    CloseMenu();
   },
   LoadGame: (el) => {
     console.log(el.id);

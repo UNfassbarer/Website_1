@@ -162,9 +162,8 @@ function gameLoop(currentTime) {
         keys[AssignmentKeys.PauseGame[0]] &&
         !keysPrev[AssignmentKeys.PauseGame[0]]
     ) {
-        PausedGame = !PausedGame;
-        clearInterval(TimingInterval);
-        if (!PausedGame) SetTimingInterval(Number(survivedTime));
+        if (PausedGame) StartAnimation(3, TogglePausedGame);
+        else TogglePausedGame();
     }
     keysPrev = { ...keys };
     if (!PausedGame) {
@@ -177,6 +176,12 @@ function gameLoop(currentTime) {
         }
     }
     if (!GameOver) requestAnimationFrame(gameLoop);
+}
+
+function TogglePausedGame() {
+    PausedGame = !PausedGame;
+    clearInterval(TimingInterval);
+    if (!PausedGame) SetTimingInterval(Number(survivedTime));
 }
 
 let obstacles = [],
@@ -659,4 +664,21 @@ function JumpAnimation(x, y) {
         supportDiv.appendChild(jumpEffect);
         EffectCounter--;
     }, 50);
+}
+
+// Create start animation
+function StartAnimation(StartTime, action) {
+    const CounterBoard = document.createElement("div");
+    CounterBoard.className = "StartAnimationBox centeredObject centerContent";
+    document.body.appendChild(CounterBoard);
+    let Intervall = null;
+    Intervall = setInterval(function () {
+        CounterBoard.innerText = StartTime;
+        StartTime--;
+        if (StartTime < 0) {
+            clearInterval(Intervall);
+            CounterBoard.classList.toggle("hiddenContent");
+            if (action) action();
+        };
+    }, 1000)
 }
